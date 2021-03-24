@@ -8,13 +8,14 @@ public class AnalLex {
 
 // Attributs
 //  ...
+  String sentence;
   Terminal terminal = new Terminal();
 
 	
 /** Constructeur pour l'initialisation d'attribut(s)
  */
-  public AnalLex( ) {
-
+  public AnalLex( String sentence) {
+    this.sentence = sentence;
   }
 
 
