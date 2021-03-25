@@ -5,24 +5,16 @@
  */
 public class Terminal {
 
-
+  public String chaine = "";
 // Constantes et attributs
 //  ....
-  private int etat;
 
 
 /** Un ou deux constructeurs (ou plus, si vous voulez)
   *   pour l'initalisation d'attributs 
  */	
-  public Terminal( ) {
-    this.etat = 0;
+  public Terminal(String UL, String type ) {
+
   }
 
-  public int getEtat() {
-    return etat;
-  }
-
-  public void setEtat(int etat) {
-    this.etat = etat;
-  }
 }

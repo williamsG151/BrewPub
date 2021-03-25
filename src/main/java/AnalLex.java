@@ -2,20 +2,31 @@
 
 /** @author Ahmed Khoumsi */
 
+import java.util.ArrayList;
+
 /** Cette classe effectue l'analyse lexicale
  */
 public class AnalLex {
 
-// Attributs
-//  ...
   String sentence;
-  Terminal terminal = new Terminal();
+  int length;
+  int index = 0;
+  int state = 0;
+
+  //Expressions régulières
+  String C = "0123456789";
+  String S = "+*/-";
+  String P = "()";
+
+  ArrayList<Terminal> terminalChain;
 
 	
 /** Constructeur pour l'initialisation d'attribut(s)
  */
-  public AnalLex( String sentence) {
-    this.sentence = sentence;
+  public AnalLex(String sentence) {
+    this.sentence = sentence.replaceAll("\\s+", "");
+    length = this.sentence.length() - 1;
+    terminalChain = new ArrayList<Terminal>();
   }
 
 
@@ -24,7 +35,7 @@ public class AnalLex {
       true s'il reste encore au moins un terminal qui n'a pas ete retourne 
  */
   public boolean resteTerminal( ) {
-    //
+    return index < length;
   }
   
   
@@ -32,14 +43,59 @@ public class AnalLex {
       Cette methode est une implementation d'un AEF
  */  
   public Terminal prochainTerminal( ) {
-     //
+    Terminal result = null;
+    String UL = "";
+    String type = null;
+    while( state != -1){
+      String current = String.format("%c" ,sentence.charAt(index));
+      switch(state){
+        case 0:
+              if(C.contains(current)){
+                state = 1;
+                UL += current;
+                type = "C";
+                index++;
+              }else if(S.contains(current)){
+                state = 99;
+                UL += current;
+                type = "S";
+                index++;
+              }else if(P.contains(current)){
+                state = 99;
+                UL += current;
+                type = "P";
+                index++;
+              }else{
+                ErreurLex(current);
+                state = -1;
+              }
+              break;
+        case 1:
+              if(C.contains(current)) {
+                UL += current;
+                index++;
+              }else{
+                state = 99;
+              }
+              break;
+        case 99:
+              result = new Terminal(UL, type);
+              break;
+        default:
+              ErreurLex("NOT A GOOD STATE");
+              state = -1;
+              break;
+      }
+    }
+    state = 0;
+    return result;
   }
 
  
 /** ErreurLex() envoie un message d'erreur lexicale
  */ 
-  public void ErreurLex(String s) {	
-     //
+  public void ErreurLex(String s) {
+
   }
 
   
