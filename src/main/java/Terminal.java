@@ -5,16 +5,15 @@
  */
 public class Terminal {
 
-  public String chaine = "";
-// Constantes et attributs
-//  ....
-
+  public String chaine;
+  public String type;
 
 /** Un ou deux constructeurs (ou plus, si vous voulez)
   *   pour l'initalisation d'attributs 
  */	
   public Terminal(String UL, String type ) {
-
+    this.chaine = UL;
+    this.type = type
   }
 
 }
