@@ -12,89 +12,81 @@ public class AnalLex {
   int length;
   int index = 0;
   int state = 0;
+  Terminal result = null;
+  String UL = "";
+  String type = null;
+  Boolean error = false;
 
   //Expressions régulières
+  String ID = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   String C = "0123456789";
   String S = "+*/-";
   String P = "()";
 
   ArrayList<Terminal> terminalChain;
 
-	
-/** Constructeur pour l'initialisation d'attribut(s)
- */
+
+  /**
+   * Constructeur pour l'initialisation d'attribut(s)
+   */
   public AnalLex(String sentence) {
     this.sentence = sentence.replaceAll("\\s+", "");
-    length = this.sentence.length() - 1;
-    terminalChain = new ArrayList<Terminal>();
+    length = this.sentence.length();
+    terminalChain = new ArrayList<>();
   }
 
 
-/** resteTerminal() retourne :
-      false  si tous les terminaux de l'expression arithmetique ont ete retournes
-      true s'il reste encore au moins un terminal qui n'a pas ete retourne 
- */
-  public boolean resteTerminal( ) {
-    return index < length;
+  /**
+   * resteTerminal() retourne :
+   * false  si tous les terminaux de l'expression arithmetique ont ete retournes
+   * true s'il reste encore au moins un terminal qui n'a pas ete retourne
+   */
+  public boolean resteTerminal() {
+    return !((index >= length) || error );
   }
-  
-  
-/** prochainTerminal() retourne le prochain terminal
-      Cette methode est une implementation d'un AEF
- */  
-  public Terminal prochainTerminal( ) {
-    Terminal result = null;
-    String UL = "";
-    String type = null;
-    while( state != -1){
-      String current = String.format("%c" ,sentence.charAt(index));
-      switch(state){
-        case 0:
-              if(C.contains(current)){
-                state = 1;
-                UL += current;
-                type = "C";
-                index++;
-              }else if(S.contains(current)){
-                state = 99;
-                UL += current;
-                type = "S";
-                index++;
-              }else if(P.contains(current)){
-                state = 99;
-                UL += current;
-                type = "P";
-                index++;
-              }else{
-                ErreurLex(current);
-                state = -1;
-              }
-              break;
-        case 1:
-              if(C.contains(current)) {
-                UL += current;
-                index++;
-              }else{
-                state = 99;
-              }
-              break;
-        case 99:
-              result = new Terminal(UL, type);
-              break;
-        default:
-              ErreurLex("NOT A GOOD STATE");
-              state = -1;
-              break;
+
+  /**
+   * prochainTerminal() retourne le prochain terminal
+   * Cette methode est une implementation d'un AEF
+   */
+  public Terminal prochainTerminal() {
+
+    while(state != -1){
+      String current = String.format("%c", sentence.charAt(index));
+      if (state == 0) {
+        if (C.contains(current)) {
+          state = 99;
+          UL += current;
+        }else{
+          erreurLex(current);
+          result = new Terminal("ERROR", type);
+          state = -1;
+          error = true;
+        }
+      } else if (state == 99) {
+        closeUL();
       }
     }
-    state = 0;
+    resetValues();
     return result;
   }
 
- 
-/** ErreurLex() envoie un message d'erreur lexicale
- */ 
-  public void ErreurLex(String s) {
+  private void closeUL(){
+    result = new Terminal(UL, type);
+    terminalChain.add(result);
+    state = -1;
+    index++;
+  }
+
+  private void resetValues(){
+    UL = "";
+    state = 0;
+  }
+
+  /**
+   * ErreurLex() envoie un message d'erreur lexicale
+   */
+  public void erreurLex(String s) {
 
   }
 

@@ -13,7 +13,7 @@ public class Terminal {
  */	
   public Terminal(String UL, String type ) {
     this.chaine = UL;
-    this.type = type
+    this.type = type;
   }
 
 }

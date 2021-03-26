@@ -18,6 +18,7 @@ public class NoeudAST extends ElemAST {
    */
   public int EvalAST( ) {
      //
+    return 0;
   }
 
 
@@ -25,6 +26,7 @@ public class NoeudAST extends ElemAST {
    */
   public String LectAST( ) {
      //
+    return "";
   }
 
 }
