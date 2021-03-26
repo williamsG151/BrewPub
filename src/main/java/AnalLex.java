@@ -52,19 +52,34 @@ public class AnalLex {
   public Terminal prochainTerminal() {
 
     while(state != -1){
+      if(index == length){
+        index--;
+        state = 99;
+      }
       String current = String.format("%c", sentence.charAt(index));
       if (state == 0) {
         if (C.contains(current)) {
+          type = "C";
+          state = 1;
+          UL += current;
+          index++;
+        }else if(S.contains(current)){
+          type = "S";
           state = 99;
           UL += current;
         }else{
-          erreurLex(current);
-          result = new Terminal("ERROR", type);
-          state = -1;
-          error = true;
+          dealWithError(current);
         }
       } else if (state == 99) {
         closeUL();
+      }else if(state == 1){
+        if(C.contains(current)){
+          UL += current;
+          index++;
+        }else{
+          state = 99;
+          index--;
+        }
       }
     }
     resetValues();
@@ -78,6 +93,13 @@ public class AnalLex {
     index++;
   }
 
+  private void dealWithError(String current){
+    erreurLex(current);
+    result = new Terminal("ERROR", type);
+    state = -1;
+    error = true;
+  }
+
   private void resetValues(){
     UL = "";
     state = 0;
@@ -89,7 +111,6 @@ public class AnalLex {
   public void erreurLex(String s) {
 
   }
-
   
   //Methode principale a lancer pour tester l'analyseur lexical
   public static void main(String[] args) {
