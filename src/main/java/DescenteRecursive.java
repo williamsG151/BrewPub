@@ -21,7 +21,8 @@ public DescenteRecursive(String in) {
  *    Elle retourne une reference sur la racine de l'AST construit
  */
 public ElemAST AnalSynt( ) {
-   //
+   return null;
+   
 }
 
 
