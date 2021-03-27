@@ -9,12 +9,20 @@ public class AnalLex {
 // Attributs
 //  ...
   Terminal terminal = new Terminal();
+  private int etat;
+  private int pointlect;
+  private String[] chaine;
+  private String carac;
 
 	
 /** Constructeur pour l'initialisation d'attribut(s)
  */
   public AnalLex( ) {
 
+      if(carac == "0"|| carac == "1" ||carac == "2" ||carac == "4"|| carac == "5" || carac == "6" || carac == "7"
+              || carac =="8" || carac == "9"){
+
+      }
   }
 
 
