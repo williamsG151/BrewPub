@@ -67,7 +67,11 @@ public class AnalLex {
           type = "S";
           state = 99;
           UL += current;
-        }else{
+        }else if(P.contains(current)){
+          type = "P";
+          state = 99;
+          UL += current;
+        } else{
           dealWithError(current);
         }
       } else if (state == 99) {
