@@ -66,7 +66,11 @@ public class AnalLex {
           state = 99;
           UL += current;
         }else if(P.contains(current)){
-          type = "P";
+          if("(".equals(current)){
+            type = "Pg";
+          }else{
+            type = "Pd";
+          }
           state = 99;
           UL += current;
         } else{

@@ -2,39 +2,79 @@
 
 /** @author Ahmed Khoumsi */
 
+import java.util.ArrayList;
+
 /** Cette classe effectue l'analyse syntaxique
  */
 public class DescenteRecursive {
 
   // Attributs
+  ArrayList<Terminal> terminalChain;
+  int index = 0;
+  int length;
+  ElemAST root = null;
+
+  Terminal courant = null;
 
 /** Constructeur de DescenteRecursive :
       - recoit en argument le nom du fichier contenant l'expression a analyser
       - pour l'initalisation d'attribut(s)
  */
-public DescenteRecursive(String in) {
-    //
+public DescenteRecursive(String in, ArrayList<Terminal> chain) {
+    terminalChain = chain;
+    length = chain.size();
 }
 
 
 /** AnalSynt() effectue l'analyse syntaxique et construit l'AST.
  *    Elle retourne une reference sur la racine de l'AST construit
  */
-public ElemAST AnalSynt( ) {
-   return null;
-   
+public ElemAST AnalSynt() {
+    courant = terminalChain.get(0);
+    E();
+    return null;
 }
 
+private void terminal(String attendu){
+
+}
 
 // Methode pour chaque symbole non-terminal de la grammaire retenue
 // ... 
 // ...
+  private void E(){
+    T();
+    if("S2".equals(courant.type)){
+      terminal("S2");
+      E();
+    }
+  }
+
+  private void T(){
+    F();
+    if("S1".equals(courant.type)){
+      terminal("S2");
+      F();
+    }
+  }
+
+  private void F(){
+    if("C".equals(courant.type)){
+      terminal("C");
+    }else if("Pg".equals(courant.type)){
+      terminal("Pg");
+      E();
+      terminal("Pd");
+    }else{
+      erreurSynt(courant.chaine);
+    }
+  }
 
 
 
 /** ErreurSynt() envoie un message d'erreur syntaxique
  */
-public void ErreurSynt(String s)
+public void erreurSynt(String s)
 {
     //
 }
