@@ -6,18 +6,23 @@
 public class NoeudAST extends ElemAST {
 
   // Attributs
+  private Terminal operateur;
+  private ElemAST enfG;
+  private ElemAST enfD;
 
   /** Constructeur pour l'initialisation d'attributs
    */
-  public NoeudAST( ) { // avec arguments
-    //
+  public NoeudAST(Terminal operateur, ElemAST enfG,ElemAST enfD ) {
+      this.operateur = operateur;
+      this.enfG = enfG;
+      this.enfD = enfD;
   }
 
  
   /** Evaluation de noeud d'AST
    */
   public int EvalAST( ) {
-     //
+
     return 0;
   }
 
@@ -25,7 +30,7 @@ public class NoeudAST extends ElemAST {
   /** Lecture de noeud d'AST
    */
   public String LectAST( ) {
-     //
+
     return "";
   }
 

@@ -5,13 +5,14 @@
  */
 public class FeuilleAST extends ElemAST {
 
-  // Attribut(s)
+  private Terminal terminal;
+
 
 
 /**Constructeur pour l'initialisation d'attribut(s)
  */
-  public FeuilleAST( ) {  // avec arguments
-    //
+  public FeuilleAST(Terminal courrant) {
+        this.terminal = courrant;
   }
 
 
