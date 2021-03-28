@@ -1,8 +1,5 @@
-AnalLex.class
-Terminal.class
-Writer.class
 NoeudAST.class
-DescenteRecursive.class
 FeuilleAST.class
+Terminal.class
 ElemAST.class
-Reader.class
+Writer.class

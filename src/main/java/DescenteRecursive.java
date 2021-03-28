@@ -10,12 +10,12 @@ public class DescenteRecursive {
 
   // Attributs
   private ArrayList<Terminal> terminalChain;
-
   int index = 0;
   int length;
   ElemAST root = null;
+  ElemAST elemCourant = null;
+  Terminal ULcourant = null;
 
-  Terminal courant = null;
 
 /** Constructeur de DescenteRecursive :
       - recoit en argument le nom du fichier contenant l'expression a analyser
@@ -31,22 +31,45 @@ public DescenteRecursive(String in, ArrayList<Terminal> chain) {
  *    Elle retourne une reference sur la racine de l'AST construit
  */
 public ElemAST AnalSynt() {
-    courant = terminalChain.get(0);
+    ULcourant = terminalChain.get(0);
     E();
     return null;
 }
 
 private void createAST(String attendu){
-    if(attendu=="C"||attendu=="Pg"||attendu=="Pd"){
-      FeuilleAST feuille = new FeuilleAST(courrant);
-      courant = terminalChain.get(index++);
-    }
-    else if(attendu=="S1"||attendu=="S2"){
-      NoeudAST noeud = new NoeudAST(courrant, );
-      courant = terminalChain.get(index++);
-    }
+    if(attendu.equals("C")||attendu.equals("ID")){
+      FeuilleAST feuille = new FeuilleAST(ULcourant);
+      elemCourant = feuille;
+      if(root == null){
+        root = feuille;
+      }
+      ULcourant = terminalChain.get(index++);
+
+    }else if(attendu.equals("S1")){
+      NoeudAST noeud = new NoeudAST(ULcourant);
+      if(root instanceof NoeudAST){
+        noeud.setEnfG(elemCourant.getEnfD());
+        elemCourant.setEnfD(noeud);
+        elemCourant = noeud;
+      }else {
+        noeud.setEnfG(elemCourant);
+        root = noeud;
+        elemCourant = noeud;
+      }
+      ULcourant = terminalChain.get(index++);
+
+    }else if(attendu.equals("S2")){
+      NoeudAST noeud = new NoeudAST(ULcourant);
+      noeud.setEnfG(root);
+      root = noeud;
+      elemCourant = noeud;
+    }else if(attendu.equals("Pg")){
+
+    }else if(attendu.equals("Pd")){
+
+  }
     else{
-      erreurSynt(courant.chaine);
+      erreurSynt(ULcourant.chaine);
     }
 }
 
@@ -55,7 +78,7 @@ private void createAST(String attendu){
 // ...
   private void E(){
     T();
-    if("S2".equals(courant.type)){
+    if("S2".equals(ULcourant.type)){
       createAST("S2");
       E();
     }
@@ -63,21 +86,25 @@ private void createAST(String attendu){
 
   private void T(){
     F();
-    if("S1".equals(courant.type)){
+    if("S1".equals(ULcourant.type)){
       createAST("S1");
-      F();
+      T();
     }
   }
 
   private void F(){
-    if("C".equals(courant.type)){
+    if("C".equals(ULcourant.type)){
       createAST("C");
-    }else if("Pg".equals(courant.type)){
+    }else if("Pg".equals(ULcourant.type)){
       createAST("Pg");
       E();
-      createAST("Pd");
+      if("Pg".equals(ULcourant.type)){
+        createAST("Pd");
+      }else{
+        erreurSynt(ULcourant.chaine);
+      }
     }else{
-      erreurSynt(courant.chaine);
+      erreurSynt(ULcourant.chaine);
     }
   }
 

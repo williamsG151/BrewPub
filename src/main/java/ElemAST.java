@@ -6,6 +6,26 @@
  */
 public abstract class ElemAST {
 
+
+  public void setEnfD(ElemAST enfD) {
+
+  }
+
+  public void setEnfG(ElemAST enfG){
+
+  }
+
+  public ElemAST getEnfD() {
+    return null;
+  }
+
+  public ElemAST getEnfG(){
+    return null;
+  }
+
+  public abstract ElemAST getParent();
+
+  public abstract void setParent(ElemAST parent);
   
   /** Evaluation d'AST
    */
