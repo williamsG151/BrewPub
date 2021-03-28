@@ -9,7 +9,8 @@ import java.util.ArrayList;
 public class DescenteRecursive {
 
   // Attributs
-  ArrayList<Terminal> terminalChain;
+  private ArrayList<Terminal> terminalChain;
+
   int index = 0;
   int length;
   ElemAST root = null;
@@ -35,8 +36,18 @@ public ElemAST AnalSynt() {
     return null;
 }
 
-private void terminal(String attendu){
-
+private void createAST(String attendu){
+    if(attendu=="C"||attendu=="Pg"||attendu=="Pd"){
+      FeuilleAST feuille = new FeuilleAST(courrant);
+      courant = terminalChain.get(index++);
+    }
+    else if(attendu=="S1"||attendu=="S2"){
+      NoeudAST noeud = new NoeudAST(courrant, );
+      courant = terminalChain.get(index++);
+    }
+    else{
+      erreurSynt(courant.chaine);
+    }
 }
 
 // Methode pour chaque symbole non-terminal de la grammaire retenue
@@ -45,7 +56,7 @@ private void terminal(String attendu){
   private void E(){
     T();
     if("S2".equals(courant.type)){
-      terminal("S2");
+      createAST("S2");
       E();
     }
   }
@@ -53,18 +64,18 @@ private void terminal(String attendu){
   private void T(){
     F();
     if("S1".equals(courant.type)){
-      terminal("S2");
+      createAST("S1");
       F();
     }
   }
 
   private void F(){
     if("C".equals(courant.type)){
-      terminal("C");
+      createAST("C");
     }else if("Pg".equals(courant.type)){
-      terminal("Pg");
+      createAST("Pg");
       E();
-      terminal("Pd");
+      createAST("Pd");
     }else{
       erreurSynt(courant.chaine);
     }
