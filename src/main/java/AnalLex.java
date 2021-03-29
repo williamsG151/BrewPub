@@ -62,7 +62,11 @@ public class AnalLex {
           UL += current;
           index++;
         }else if(S.contains(current)){
-          type = "S";
+          if("*/".contains(current)){
+            type = "S1";
+          }else{
+            type = "S2";
+          }
           state = 99;
           UL += current;
         }else if(P.contains(current)){
@@ -115,7 +119,8 @@ public class AnalLex {
    * ErreurLex() envoie un message d'erreur lexicale
    */
   public void erreurLex(String s) {
-
+    String message = String.format("A lexical error occured with symbol %c ", s);
+    System.out.println(message);
   }
 
   //Methode principale a lancer pour tester l'analyseur lexical

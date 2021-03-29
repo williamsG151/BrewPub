@@ -9,12 +9,15 @@ import java.util.ArrayList;
 public class DescenteRecursive {
 
   // Attributs
-  private ArrayList<Terminal> terminalChain;
+  private final ArrayList<Terminal> terminalChain;
+  private final ArrayList<ElemAST> rootScope = new ArrayList<>();
+  private ArrayList<ElemAST> elemCourantScope = new ArrayList<>();
   int index = 0;
   int length;
   ElemAST root = null;
   ElemAST elemCourant = null;
   Terminal ULcourant = null;
+  Boolean error = false;
 
 
 /** Constructeur de DescenteRecursive :
@@ -36,75 +39,117 @@ public ElemAST AnalSynt() {
     return null;
 }
 
-private void createAST(String attendu){
-    if(attendu.equals("C")||attendu.equals("ID")){
-      FeuilleAST feuille = new FeuilleAST(ULcourant);
-      elemCourant = feuille;
-      if(root == null){
-        root = feuille;
+private Boolean createAST(String attendu){
+    switch (attendu) {
+      case "C":
+      case "ID": {
+        FeuilleAST feuille = new FeuilleAST(ULcourant);
+        if (root == null) {
+          root = feuille;
+        }
+        if (elemCourant instanceof NoeudAST) {
+          elemCourant.setEnfD(feuille);
+          feuille.setParent(elemCourant);
+        }
+        elemCourant = feuille;
+        getNextUL();
+        break;
       }
-      ULcourant = terminalChain.get(index++);
-
-    }else if(attendu.equals("S1")){
-      NoeudAST noeud = new NoeudAST(ULcourant);
-      if(root instanceof NoeudAST){
-        noeud.setEnfG(elemCourant.getEnfD());
-        elemCourant.setEnfD(noeud);
-        elemCourant = noeud;
-      }else {
-        noeud.setEnfG(elemCourant);
+      case "S1": {
+        NoeudAST noeud = new NoeudAST(ULcourant);
+        if (root instanceof NoeudAST) {
+          noeud.setEnfG(elemCourant);
+          elemCourant.getParent().setEnfD(noeud);
+          elemCourant.setParent(noeud);
+          elemCourant = noeud;
+        } else {
+          noeud.setEnfG(elemCourant);
+          root = noeud;
+          elemCourant = noeud;
+        }
+        getNextUL();
+        break;
+      }
+      case "S2": {
+        NoeudAST noeud = new NoeudAST(ULcourant);
+        noeud.setEnfG(root);
         root = noeud;
         elemCourant = noeud;
+        getNextUL();
+        break;
       }
-      ULcourant = terminalChain.get(index++);
+      case "Pg":{
+        rootScope.add(root);
+        root = null;
+        elemCourant = null;
+        getNextUL();
+        break;
+      }
+      case "Pd":{
+        ElemAST newRoot = rootScope.get(rootScope.size()-1);
+        if(newRoot == null){
 
-    }else if(attendu.equals("S2")){
-      NoeudAST noeud = new NoeudAST(ULcourant);
-      noeud.setEnfG(root);
-      root = noeud;
-      elemCourant = noeud;
-    }else if(attendu.equals("Pg")){
-
-    }else if(attendu.equals("Pd")){
-
-  }
-    else{
-      erreurSynt(ULcourant.chaine);
+        }else{
+          newRoot.setEnfD(root);
+          root = newRoot;
+          elemCourant = newRoot;
+        }
+        rootScope.remove(rootScope.size()-1);
+        getNextUL();
+        break;
+      }
+      default: {
+        erreurSynt(ULcourant.chaine);
+        return false;
+      }
     }
+    return true;
 }
 
+private void getNextUL() {
+  if (index <  length-1) {
+    index++;
+    ULcourant = terminalChain.get(index);
+  }
+}
 // Methode pour chaque symbole non-terminal de la grammaire retenue
 // ... 
 // ...
   private void E(){
-    T();
-    if("S2".equals(ULcourant.type)){
-      createAST("S2");
-      E();
-    }
-  }
-
-  private void T(){
-    F();
-    if("S1".equals(ULcourant.type)){
-      createAST("S1");
+  if(!error) {
       T();
+      if ("S2".equals(ULcourant.type) && !error) {
+        createAST("S2");
+        E();
+      }
     }
   }
 
-  private void F(){
-    if("C".equals(ULcourant.type)){
-      createAST("C");
-    }else if("Pg".equals(ULcourant.type)){
-      createAST("Pg");
-      E();
-      if("Pg".equals(ULcourant.type)){
-        createAST("Pd");
-      }else{
+  private void T() {
+    if (!error) {
+      F();
+      if ("S1".equals(ULcourant.type) && !error) {
+        createAST("S1");
+        T();
+      }
+    }
+  }
+
+  private void F() {
+    if (!error) {
+      if ("C".equals(ULcourant.type)) {
+        createAST("C");
+      }else if ("Pg".equals(ULcourant.type)) {
+        createAST("Pg");
+        E();
+        if ("Pd".equals(ULcourant.type) && !error) {
+          createAST("Pd");
+        } else {
+          erreurSynt(ULcourant.chaine);
+        }
+      } else {
         erreurSynt(ULcourant.chaine);
       }
-    }else{
-      erreurSynt(ULcourant.chaine);
     }
   }
 
@@ -114,10 +159,21 @@ private void createAST(String attendu){
  */
 public void erreurSynt(String s)
 {
-    //
+  String message1 = String.format("\nA syntax error have ben detected with this terminal symbol: %s", s);
+  String message2 = "Error: ";
+  for(int i =0; i<length; i++){
+    if(i==index){
+      message2 += String.format(" [ %s ] ", terminalChain.get(i).chaine);
+    }else{
+      message2 += terminalChain.get(i).chaine;
+    }
+  }
+  String message3 = String.format("Error was found at lexical unit %d out of %d", index, length);
+  System.out.println(message1);
+  System.out.println(message2);
+  System.out.println(message3);
+  error = true;
 }
-
-
 
   //Methode principale a lancer pour tester l'analyseur syntaxique 
   public static void main(String[] args) {
@@ -130,14 +186,22 @@ public void erreurSynt(String s)
       args[0] = "ExpArith.txt";
       args[1] = "ResultatSyntaxique.txt";
     }
-    DescenteRecursive dr = new DescenteRecursive(args[0]);
+    System.out.println("Debut d'analyse lexicale");
+    Reader r = new Reader(args[0]);
+    AnalLex lexical = new AnalLex(r.toString());
+    while(lexical.resteTerminal()){
+      lexical.prochainTerminal();
+    }
+    System.out.println("Fin d'analyse lexicale");
+
+    DescenteRecursive dr = new DescenteRecursive(args[0], lexical.terminalChain);
     try {
       ElemAST RacineAST = dr.AnalSynt();
-      toWriteLect += "Lecture de l'AST trouve : " + RacineAST.LectAST() + "\n";
-      System.out.println(toWriteLect);
-      toWriteEval += "Evaluation de l'AST trouve : " + RacineAST.EvalAST() + "\n";
-      System.out.println(toWriteEval);
-      Writer w = new Writer(args[1],toWriteLect+toWriteEval); // Ecriture de toWrite 
+      //toWriteLect += "Lecture de l'AST trouve : " + RacineAST.LectAST() + "\n";
+      //System.out.println(toWriteLect);
+      //toWriteEval += "Evaluation de l'AST trouve : " + RacineAST.EvalAST() + "\n";
+      //System.out.println(toWriteEval);
+      //Writer w = new Writer(args[1],toWriteLect+toWriteEval); // Ecriture de toWrite
                                                               // dans fichier args[1]
     } catch (Exception e) {
       System.out.println(e);
@@ -146,6 +210,5 @@ public void erreurSynt(String s)
     }
     System.out.println("Analyse syntaxique terminee");
   }
-
 }
 
