@@ -118,8 +118,8 @@ public class AnalLex {
   /**
    * ErreurLex() envoie un message d'erreur lexicale
    */
-  public void erreurLex(String s) {
-    String message = String.format("A lexical error occured with symbol %c ", s);
+  private void erreurLex(String s) {
+    String message = String.format("A lexical error occured with symbol %s ", s);
     System.out.println(message);
   }
 
