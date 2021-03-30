@@ -27,16 +27,6 @@ public class NoeudAST extends ElemAST {
     this.enfG = enfG;
   }
 
-  @Override
-  public ElemAST getEnfD() {
-    return enfD;
-  }
-
-  @Override
-  public ElemAST getEnfG(){
-    return enfG;
-  }
-
   public ElemAST getParent(){
     return parent;
   }
@@ -78,7 +68,6 @@ public class NoeudAST extends ElemAST {
     String result = String.format("%s %s %s", enfG.LectAST(), enfD.LectAST(), operateur.chaine);
     return result;
   }
-
 }
 
 

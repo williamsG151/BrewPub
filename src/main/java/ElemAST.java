@@ -15,14 +15,6 @@ public abstract class ElemAST {
 
   }
 
-  public ElemAST getEnfD() {
-    return null;
-  }
-
-  public ElemAST getEnfG(){
-    return null;
-  }
-
   public abstract ElemAST getParent();
 
   public abstract void setParent(ElemAST parent);

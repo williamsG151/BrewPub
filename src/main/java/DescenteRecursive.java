@@ -11,12 +11,12 @@ public class DescenteRecursive {
   // Attributs
   private final ArrayList<Terminal> terminalChain;
   private final ArrayList<ElemAST> rootScope = new ArrayList<>();
-  int index = 0;
-  int length;
-  ElemAST root = null;
-  ElemAST elemCourant = null;
-  Terminal ULcourant = null;
-  Boolean error = false;
+  private int index = 0;
+  private int length;
+  private ElemAST root = null;
+  private ElemAST elemCourant = null;
+  private Terminal ULcourant = null;
+  private Boolean error = false;
 
 
 /** Constructeur de DescenteRecursive :
@@ -35,7 +35,7 @@ public DescenteRecursive(String in, ArrayList<Terminal> chain) {
 public ElemAST AnalSynt() {
     ULcourant = terminalChain.get(0);
     E();
-    removeExtraPArenthesis();
+    removeExtraParenthesis();
     return root;
 }
 
@@ -169,7 +169,7 @@ private void getNextUL() {
 
 /** ErreurSynt() envoie un message d'erreur syntaxique
  */
-public void erreurSynt(String s)
+private void erreurSynt(String s)
 {
   String message1 = String.format("\nA syntax error have ben detected with this terminal symbol: %s", s);
   String message2 = "Error: ";
@@ -186,7 +186,7 @@ public void erreurSynt(String s)
   System.out.println(message3);
   error = true;
 }
-private void removeExtraPArenthesis(){
+private void removeExtraParenthesis(){
   if(root == null && elemCourant != null){
     root = elemCourant;
   }
@@ -214,12 +214,12 @@ private void removeExtraPArenthesis(){
     DescenteRecursive dr = new DescenteRecursive(args[0], lexical.terminalChain);
     try {
       ElemAST RacineAST = dr.AnalSynt();
-//      toWriteLect += "Lecture de l'AST trouve : " + RacineAST.LectAST() + "\n";
-//      System.out.println(toWriteLect);
-//      toWriteEval += "Evaluation de l'AST trouve : " + RacineAST.EvalAST() + "\n";
-//      System.out.println(toWriteEval);
-//      Writer w = new Writer(args[1],toWriteLect+toWriteEval); // Ecriture de toWrite
-//                                                               //dans fichier args[1]
+      toWriteLect += "Lecture de l'AST trouve : " + RacineAST.LectAST() + "\n";
+      System.out.println(toWriteLect);
+      toWriteEval += "Evaluation de l'AST trouve : " + RacineAST.EvalAST() + "\n";
+      System.out.println(toWriteEval);
+      Writer w = new Writer(args[1],toWriteLect+toWriteEval); // Ecriture de toWrite
+                                                               //dans fichier args[1]
     } catch (Exception e) {
       System.out.println(e);
       e.printStackTrace();
