@@ -57,7 +57,7 @@ private Boolean createAST(String attendu){
       }
       case "S1": {
         NoeudAST noeud = new NoeudAST(ULcourant);
-        if (root instanceof NoeudAST) {
+        if (root instanceof NoeudAST) {   //This if statement is only usefull for the first operation of the expression because root is not a node
           noeud.setEnfG(elemCourant);
           elemCourant.getParent().setEnfD(noeud);
           elemCourant.setParent(noeud);
@@ -72,29 +72,43 @@ private Boolean createAST(String attendu){
       }
       case "S2": {
         NoeudAST noeud = new NoeudAST(ULcourant);
-        noeud.setEnfG(root);
-        root = noeud;
-        elemCourant = noeud;
+        if(root != null) {
+          noeud.setEnfG(root);
+          root = noeud;
+          elemCourant = noeud;
+        }else {
+          noeud.setEnfG(elemCourant);
+          root = noeud;
+          elemCourant = noeud;
+        }
         getNextUL();
         break;
       }
       case "Pg":{
-        rootScope.add(root);
-        root = null;
-        elemCourant = null;
+        if(root == null){
+          rootScope.add(null);
+        }else{
+          rootScope.add(root);
+          root = null;
+          elemCourant = null;
+        }
         getNextUL();
         break;
       }
       case "Pd":{
-        ElemAST newRoot = rootScope.get(rootScope.size()-1);
-        if(newRoot == null){
+        ElemAST lastRoot = rootScope.get(rootScope.size()-1);
+        if(lastRoot == null){
+          elemCourant = root;
+          root = lastRoot;
+          rootScope.remove(rootScope.size()-1);
 
         }else{
-          newRoot.setEnfD(root);
-          root = newRoot;
-          elemCourant = newRoot;
+          lastRoot.setEnfD(root);
+          root = lastRoot;
+          elemCourant = lastRoot;
+          rootScope.remove(rootScope.size()-1);
         }
-        rootScope.remove(rootScope.size()-1);
+
         getNextUL();
         break;
       }
@@ -152,8 +166,6 @@ private void getNextUL() {
       }
     }
   }
-
-
 
 /** ErreurSynt() envoie un message d'erreur syntaxique
  */
