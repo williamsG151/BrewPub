@@ -18,7 +18,7 @@ public class FeuilleAST extends ElemAST {
     /** Evaluation de feuille d'AST
    */
   public int EvalAST( ) {
-    return 0;
+    return Integer.parseInt(terminal.chaine);
   }
 
   public ElemAST getParent(){
@@ -32,7 +32,7 @@ public class FeuilleAST extends ElemAST {
  /** Lecture de chaine de caracteres correspondant a la feuille d'AST
   */
   public String LectAST( ) {
-    return "";
+    return terminal.chaine;
   }
 
 }

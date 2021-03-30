@@ -36,7 +36,7 @@ public DescenteRecursive(String in, ArrayList<Terminal> chain) {
 public ElemAST AnalSynt() {
     ULcourant = terminalChain.get(0);
     E();
-    return null;
+    return root;
 }
 
 private Boolean createAST(String attendu){
@@ -57,12 +57,12 @@ private Boolean createAST(String attendu){
       }
       case "S1": {
         NoeudAST noeud = new NoeudAST(ULcourant);
-        if (root instanceof NoeudAST) {   //This if statement is only usefull for the first operation of the expression because root is not a node
+        if (elemCourant instanceof FeuilleAST) {
           noeud.setEnfG(elemCourant);
           elemCourant.getParent().setEnfD(noeud);
           elemCourant.setParent(noeud);
           elemCourant = noeud;
-        } else {
+        } else {            //This if statement is only usefull for the first operation of the expression because root is not a node
           noeud.setEnfG(elemCourant);
           root = noeud;
           elemCourant = noeud;
@@ -121,7 +121,7 @@ private Boolean createAST(String attendu){
 }
 
 private void getNextUL() {
-  if (index <  length-1) {
+  if (index < length-1) {
     index++;
     ULcourant = terminalChain.get(index);
   }
@@ -209,12 +209,12 @@ public void erreurSynt(String s)
     DescenteRecursive dr = new DescenteRecursive(args[0], lexical.terminalChain);
     try {
       ElemAST RacineAST = dr.AnalSynt();
-      //toWriteLect += "Lecture de l'AST trouve : " + RacineAST.LectAST() + "\n";
-      //System.out.println(toWriteLect);
-      //toWriteEval += "Evaluation de l'AST trouve : " + RacineAST.EvalAST() + "\n";
-      //System.out.println(toWriteEval);
-      //Writer w = new Writer(args[1],toWriteLect+toWriteEval); // Ecriture de toWrite
-                                                              // dans fichier args[1]
+      toWriteLect += "Lecture de l'AST trouve : " + RacineAST.LectAST() + "\n";
+      System.out.println(toWriteLect);
+      toWriteEval += "Evaluation de l'AST trouve : " + RacineAST.EvalAST() + "\n";
+      System.out.println(toWriteEval);
+      Writer w = new Writer(args[1],toWriteLect+toWriteEval); // Ecriture de toWrite
+                                                               //dans fichier args[1]
     } catch (Exception e) {
       System.out.println(e);
       e.printStackTrace();

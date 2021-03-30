@@ -5,7 +5,7 @@
 public class NoeudAST extends ElemAST {
 
   // Attributs
-  private Terminal operateur;
+  private final Terminal operateur;
   private ElemAST enfG=null;
   private ElemAST enfD=null;
 
@@ -48,16 +48,35 @@ public class NoeudAST extends ElemAST {
   /** Evaluation de noeud d'AST
    */
   public int EvalAST( ) {
-
-    return 0;
+    int gauche = enfG.EvalAST();
+    int droit = enfD.EvalAST();
+    Integer result = 0;
+    switch(operateur.chaine){
+      case "+":
+        result = gauche + droit;
+        break;
+      case "-":
+        result = gauche - droit;
+        break;
+      case "*":
+        result = gauche * droit;
+        break;
+      case "/":
+        result = gauche / droit;
+        break;
+      default:
+        result = null;
+        System.out.println("ERROR: An operator has not been defined");
+    }
+    return result;
   }
 
 
   /** Lecture de noeud d'AST
    */
   public String LectAST( ) {
-
-    return "";
+    String result = String.format("%s %s %s", enfG.LectAST(), enfD.LectAST(), operateur.chaine);
+    return result;
   }
 
 }
