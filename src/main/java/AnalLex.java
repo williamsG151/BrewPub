@@ -16,7 +16,8 @@ public class AnalLex {
   Boolean error = false;
 
   //Expressions régulières
-  String ID = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  String IDm = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  String ID = "abcdefghijklmnopqrstuvwxyz_";
   String C = "0123456789";
   String S = "+*/-";
   String P = "()";
@@ -77,18 +78,45 @@ public class AnalLex {
           }
           state = 99;
           UL += current;
-        } else{
+        }else if(IDm.contains(current)){
+          type = "ID";
+          state = 2;
+          UL += current;
+          index++;
+        }else{
           dealWithError(current);
         }
       } else if (state == 99) {
         closeUL();
-      }else if(state == 1){
+      }else if(state == 1){   // this state is for numbers
         if(C.contains(current)){
           UL += current;
           index++;
         }else{
           state = 99;
           index--;
+        }
+      }else if(state == 2){     // this state is for identifiants and is a final state
+        if(ID.contains(current) || IDm.contains(current)){
+          if(current.contains("_")){
+            state = 3;
+            if(index == length-1){    // this statement is only here to deal with the eventuality that the last character of the last lexical unit being an identifiant finishing with "_"
+              dealWithError(current);
+            }
+          }
+          UL += current;
+          index++;
+        }else{
+          state = 99;
+          index--;
+        }
+      }else if(state == 3){    // this state is for dealing with "_" in identifiant type only
+        if( (ID.contains(current) || IDm.contains(current)) && !current.contains("_")){
+          UL += current;
+          index++;
+          state = 2;
+        }else{
+          dealWithError(current);
         }
       }
     }

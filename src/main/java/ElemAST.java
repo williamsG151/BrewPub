@@ -15,18 +15,20 @@ public abstract class ElemAST {
 
   }
 
+  public abstract Terminal getFeuille();
+
   public abstract ElemAST getParent();
 
   public abstract void setParent(ElemAST parent);
   
   /** Evaluation d'AST
    */
-  public abstract int EvalAST();
+  public abstract Integer EvalAST();
 
 
   /** Lecture d'AST
    */
-  public abstract String LectAST();
+  public abstract String LectAST(boolean postfix);
 
 
 /** ErreurEvalAST() envoie un message d'erreur lors de la construction d'AST

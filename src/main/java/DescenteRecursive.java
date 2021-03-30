@@ -151,7 +151,7 @@ private void getNextUL() {
 
   private void F() {
     if (!error) {
-      if ("C".equals(ULcourant.type)) {
+      if ("C".equals(ULcourant.type) || "ID".equals(ULcourant.type)) {
         createAST("C");
       }else if ("Pg".equals(ULcourant.type)) {
         createAST("Pg");
@@ -212,14 +212,16 @@ private void removeExtraParenthesis(){
     System.out.println("Fin d'analyse lexicale");
 
     DescenteRecursive dr = new DescenteRecursive(args[0], lexical.terminalChain);
+
     try {
       ElemAST RacineAST = dr.AnalSynt();
-      toWriteLect += "Lecture de l'AST trouve : " + RacineAST.LectAST() + "\n";
-      System.out.println(toWriteLect);
-      toWriteEval += "Evaluation de l'AST trouve : " + RacineAST.EvalAST() + "\n";
-      System.out.println(toWriteEval);
-      Writer w = new Writer(args[1],toWriteLect+toWriteEval); // Ecriture de toWrite
-                                                               //dans fichier args[1]
+//      boolean postfix = true;
+//      toWriteLect += "Lecture de l'AST trouve : " + RacineAST.LectAST(postfix) + "\n";
+//      System.out.println(toWriteLect);
+//      toWriteEval += "Evaluation de l'AST trouve : " + RacineAST.EvalAST() + "\n";
+//      System.out.println(toWriteEval);
+//      Writer w = new Writer(args[1],toWriteLect+toWriteEval); // Ecriture de toWrite
+//                                                               //dans fichier args[1]
     } catch (Exception e) {
       System.out.println(e);
       e.printStackTrace();

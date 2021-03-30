@@ -17,8 +17,14 @@ public class FeuilleAST extends ElemAST {
 
     /** Evaluation de feuille d'AST
    */
-  public int EvalAST( ) {
-    return Integer.parseInt(terminal.chaine);
+  public Integer EvalAST( ) {
+      Integer result = null;
+      if(terminal.type.equals("ID")){
+          result = null;
+      }else{
+          result = Integer.parseInt(terminal.chaine);
+      }
+      return result;
   }
 
   public ElemAST getParent(){
@@ -29,9 +35,13 @@ public class FeuilleAST extends ElemAST {
       this.parent = parent;
   }
 
- /** Lecture de chaine de caracteres correspondant a la feuille d'AST
+public Terminal getFeuille() {
+    return terminal;
+}
+
+    /** Lecture de chaine de caracteres correspondant a la feuille d'AST
   */
-  public String LectAST( ) {
+  public String LectAST(boolean postfix ) {
     return terminal.chaine;
   }
 
