@@ -11,7 +11,6 @@ public class DescenteRecursive {
   // Attributs
   private final ArrayList<Terminal> terminalChain;
   private final ArrayList<ElemAST> rootScope = new ArrayList<>();
-  private ArrayList<ElemAST> elemCourantScope = new ArrayList<>();
   int index = 0;
   int length;
   ElemAST root = null;
@@ -36,6 +35,7 @@ public DescenteRecursive(String in, ArrayList<Terminal> chain) {
 public ElemAST AnalSynt() {
     ULcourant = terminalChain.get(0);
     E();
+    removeExtraPArenthesis();
     return root;
 }
 
@@ -180,11 +180,16 @@ public void erreurSynt(String s)
       message2 += terminalChain.get(i).chaine;
     }
   }
-  String message3 = String.format("Error was found at lexical unit %d out of %d", index, length);
+  String message3 = String.format("Error was found at lexical unit %d out of %d", index, length-1);
   System.out.println(message1);
   System.out.println(message2);
   System.out.println(message3);
   error = true;
+}
+private void removeExtraPArenthesis(){
+  if(root == null && elemCourant != null){
+    root = elemCourant;
+  }
 }
 
   //Methode principale a lancer pour tester l'analyseur syntaxique 
@@ -209,12 +214,12 @@ public void erreurSynt(String s)
     DescenteRecursive dr = new DescenteRecursive(args[0], lexical.terminalChain);
     try {
       ElemAST RacineAST = dr.AnalSynt();
-      toWriteLect += "Lecture de l'AST trouve : " + RacineAST.LectAST() + "\n";
-      System.out.println(toWriteLect);
-      toWriteEval += "Evaluation de l'AST trouve : " + RacineAST.EvalAST() + "\n";
-      System.out.println(toWriteEval);
-      Writer w = new Writer(args[1],toWriteLect+toWriteEval); // Ecriture de toWrite
-                                                               //dans fichier args[1]
+//      toWriteLect += "Lecture de l'AST trouve : " + RacineAST.LectAST() + "\n";
+//      System.out.println(toWriteLect);
+//      toWriteEval += "Evaluation de l'AST trouve : " + RacineAST.EvalAST() + "\n";
+//      System.out.println(toWriteEval);
+//      Writer w = new Writer(args[1],toWriteLect+toWriteEval); // Ecriture de toWrite
+//                                                               //dans fichier args[1]
     } catch (Exception e) {
       System.out.println(e);
       e.printStackTrace();
